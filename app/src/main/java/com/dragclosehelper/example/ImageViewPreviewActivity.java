@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.dragclosehelper.library.DragCloseHelper;
+import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
 //import com.hwangjr.rxbus.RxBus;
 
@@ -103,6 +105,9 @@ public class ImageViewPreviewActivity extends BaseActivity {
                         viewPager.setLocked(true);
                     }
                 }
+            });
+            imageView.setOnPhotoTapListener((view, x, y) -> {
+              onBackPressed();
             });
             list.add(imageView);
         }
@@ -194,22 +199,6 @@ public class ImageViewPreviewActivity extends BaseActivity {
                     onBackPressed();
                 }
             }
-        });
-        dragCloseHelper.setClickListener(new DragCloseHelper.ClickListener() {
-            @Override
-            public void onClick(View view, int typeClick) {
-                Log.e("test ", "onClick: "+typeClick);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (typeClick==1){
-                              onBackPressed();
-                        }
-                    }
-                });
-
-            }
-
         });
         setEnterSharedElementCallback(new SharedElementCallback() {
             @Override

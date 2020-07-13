@@ -192,7 +192,7 @@ public class DragCloseHelper {
                 //长按没有处理，开始执行单击
                 parentV.removeCallbacks(longClickRunnable);
                 if (clickListener != null) {
-                    initOnClick();
+                    clickListener.onClick(childV, false);
                 }
             }
             //结束了按的状态
@@ -503,7 +503,7 @@ public class DragCloseHelper {
         @Override
         public void run() {
             if (isPress && clickListener != null) {
-                clickListener.onClick(childV, 3);
+                clickListener.onClick(childV, true);
                 longClickPerform = true;
             }
         }
@@ -546,7 +546,7 @@ public class DragCloseHelper {
         /**
          * 点击事件
          */
-        void onClick(View view, int typeClick);
+        void onClick(View view, boolean isLongClick);
 
     }
 
@@ -595,34 +595,5 @@ public class DragCloseHelper {
             e.printStackTrace();
         }
         return dpi;
-    }
-
-
-    private void initOnClick() {
-        if (firstClickTime > 0) {
-            secondClickTime = System.currentTimeMillis();
-            if (secondClickTime - firstClickTime < 200) {
-                Log.e("test", "onClick: 双击");;//双击回调
-                clickListener.onClick(childV, 2);
-                firstClickTime = 0;
-                isDoubleClick = true;
-                return;
-            }
-        }
-        firstClickTime = System.currentTimeMillis();
-        isDoubleClick = false;
-        ThreadUtils.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                firstClickTime = 0;
-                if (!isDoubleClick) {
-                    Log.e("test", "run: 单击" + "\n" + mLastRawX + ">>" + mLastX + ">>" + mLastRawX + ">>" + mLastRawY);
-                    if (dragCloseListener != null && clickListener != null) {
-                        clickListener.onClick(childV, mLastRawY > 0 ? 0 : 1);
-                        resetCallBackAnimation();
-                    }
-                }
-            }
-        }, 400);
     }
 }
